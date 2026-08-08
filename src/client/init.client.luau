@@ -7,6 +7,7 @@ local Controllers = script.Controllers
 -- Порядок запуска задаётся здесь и только здесь. Новый контроллер — новая строка.
 local CONTROLLER_ORDER: { ModuleScript } = {
 	Controllers.DataController,
+	Controllers.CameraController,
 }
 
 for _, moduleScript in CONTROLLER_ORDER do

@@ -10,6 +10,7 @@ local SERVICE_ORDER: { ModuleScript } = {
 	Services.LeaderstatsService,
 	Services.ProfileReplicationService,
 	Services.MatchmakingService,
+	Services.ArenaService,
 	Services.QueueService,
 }
 

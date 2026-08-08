@@ -22,6 +22,9 @@ local DEFINITIONS: { [string]: string } = {
 	ProfileUpdated = "RemoteEvent",
 	-- Запрос данных по инициативе клиента (стартовая синхронизация).
 	GetProfile = "RemoteFunction",
+
+	-- Переключение камеры матча. Сервер -> клиент.
+	MatchCamera = "RemoteEvent",
 }
 
 local function getFolder(): Folder
