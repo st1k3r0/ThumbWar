@@ -63,7 +63,14 @@
           0
         ],
         "Brightness": 2,
+        "ClockTime": 14,
+        "EnvironmentDiffuseScale": 0.5,
         "GlobalShadows": true,
+        "OutdoorAmbient": [
+          0.42,
+          0.42,
+          0.45
+        ],
         "Technology": "ShadowMap"
       }
     },
