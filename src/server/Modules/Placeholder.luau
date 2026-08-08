@@ -1,0 +1,3 @@
+local Placeholder = {}
+
+return Placeholder

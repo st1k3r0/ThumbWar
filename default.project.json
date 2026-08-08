@@ -6,6 +6,12 @@
     "ReplicatedStorage": {
       "Shared": {
         "$path": "src/shared"
+      },
+      "Remotes": {
+        "$path": "src/remotes"
+      },
+      "Assets": {
+        "$path": "src/assets"
       }
     },
 
