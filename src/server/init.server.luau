@@ -9,6 +9,8 @@ local SERVICE_ORDER: { ModuleScript } = {
 	Services.DataService,
 	Services.LeaderstatsService,
 	Services.ProfileReplicationService,
+	Services.MatchmakingService,
+	Services.QueueService,
 }
 
 for _, moduleScript in SERVICE_ORDER do
