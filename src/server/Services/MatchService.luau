@@ -1,12 +1,16 @@
 --!strict
--- Состояние матчей: создание объекта матча, доступ к нему и удаление.
+-- Состояние матчей и машина состояний: создание объекта матча, доступ к нему,
+-- удаление и прогон матча по фазам.
 --
--- Здесь только состояние. Переходы между фазами, правила раундов и определение
--- победителя живут в матчевой логике, а не в этом хранилище.
--- Поля объекта матча обычные и меняются напрямую: match.phase = MatchPhase.Hunt.
+-- Круг раунда: Ritual -> Hunt -> Pin -> RoundEnd. Дальше либо новый раунд
+-- с Ritual, либо MatchEnd. Внутри фаз пока ничего не происходит: каждая просто
+-- выдерживает свою длительность из Config и уступает место следующей.
+-- Определение победителя раунда появится вместе с геймплеем.
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
 
+local Config = require(ReplicatedStorage.Shared.Config)
 local MatchPhase = require(ReplicatedStorage.Shared.MatchPhase)
 
 local MatchService = {}
@@ -27,7 +31,18 @@ export type Match = {
 local matches: { [number]: Match } = {}
 local matchByPlayer: { [Player]: number } = {}
 
+-- Матчи, для которых машина состояний уже крутится.
+local running: { [number]: boolean } = {}
+
 local nextMatchId = 0
+
+-- Порядок фаз внутри одного раунда.
+local ROUND_PHASES: { MatchPhase.Phase } = {
+	MatchPhase.Ritual,
+	MatchPhase.Hunt,
+	MatchPhase.Pin,
+	MatchPhase.RoundEnd,
+}
 
 -- Создаёт объект матча в начальном состоянии: первый раунд, фаза Ritual,
 -- счёт по нулям. Нули и первый раунд — это пустое стартовое состояние,
@@ -90,6 +105,7 @@ function MatchService.Destroy(matchId: number): boolean
 	end
 
 	matches[matchId] = nil
+	running[matchId] = nil
 	for _, player in match.players do
 		if matchByPlayer[player] == matchId then
 			matchByPlayer[player] = nil
@@ -97,6 +113,84 @@ function MatchService.Destroy(matchId: number): boolean
 	end
 
 	return true
+end
+
+-- Подписчики на смену фазы. Через них состояние уходит клиентам,
+-- а сама машина состояний про сеть ничего не знает.
+local phaseListeners: { (match: Match, phaseEndsAt: number) -> () } = {}
+
+function MatchService.OnPhaseChanged(callback: (match: Match, phaseEndsAt: number) -> ())
+	table.insert(phaseListeners, callback)
+end
+
+-- Ставит фазу, пишет в лог и сообщает подписчикам.
+-- Возвращает длительность фазы, чтобы вызывающий не искал её второй раз.
+local function setPhase(match: Match, phase: MatchPhase.Phase): number
+	local duration = Config.Match.PhaseDuration[phase]
+	-- Время окончания считает сервер: клиент рисует отсчёт по нему,
+	-- а не по своим часам.
+	local phaseEndsAt = Workspace:GetServerTimeNow() + duration
+
+	match.phase = phase
+	print(`[Матч {match.id}] раунд {match.roundNumber}: {phase}`)
+
+	for _, listener in phaseListeners do
+		-- Упавший подписчик не должен останавливать матч.
+		local ok, err = pcall(listener, match, phaseEndsAt)
+		if not ok then
+			warn(`[Матч {match.id}] подписчик на смену фазы упал: {err}`)
+		end
+	end
+
+	return duration
+end
+
+-- Матч заканчивается, когда кто-то набрал нужное число побед
+-- или когда сыграны все раунды.
+local function isMatchOver(match: Match): boolean
+	for _, wins in match.score do
+		if wins >= Config.Match.RoundsToWin then
+			return true
+		end
+	end
+
+	return match.roundNumber >= Config.Match.TotalRounds
+end
+
+-- Прогоняет матч по фазам до конца. Вызывать повторно для того же матча нельзя:
+-- две машины состояний на одном объекте затопчут друг друга.
+-- Удаление матча остаётся за вызывающим: здесь только прогон.
+function MatchService.Start(match: Match): boolean
+	if running[match.id] then
+		return false
+	end
+
+	running[match.id] = true
+
+	task.spawn(function()
+		while true do
+			for _, phase in ROUND_PHASES do
+				task.wait(setPhase(match, phase))
+			end
+
+			if isMatchOver(match) then
+				break
+			end
+
+			match.roundNumber += 1
+		end
+
+		task.wait(setPhase(match, MatchPhase.MatchEnd))
+
+		running[match.id] = nil
+		print(`[Матч {match.id}] завершён на раунде {match.roundNumber}`)
+	end)
+
+	return true
+end
+
+function MatchService.IsRunning(matchId: number): boolean
+	return running[matchId] == true
 end
 
 function MatchService.Init() end

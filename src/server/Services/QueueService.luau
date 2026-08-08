@@ -46,7 +46,7 @@ local function updateSign()
 	end
 
 	lastDisplayedCount = count
-	countLabel.Text = `В ОЧЕРЕДИ: {count}`
+	countLabel.Text = `IN QUEUE: {count}`
 end
 
 -- Возвращает множество игроков, стоящих на площадке прямо сейчас.

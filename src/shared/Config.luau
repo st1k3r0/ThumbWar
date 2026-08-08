@@ -6,6 +6,16 @@ local Config = {
 	Match = {
 		RoundsToWin = 2,
 		TotalRounds = 3,
+
+		-- Сколько секунд длится каждая фаза. Ключи совпадают с именами фаз
+		-- из Shared.MatchPhase.
+		PhaseDuration = {
+			Ritual = 2.5,
+			Hunt = 2,
+			Pin = 2,
+			RoundEnd = 2,
+			MatchEnd = 2,
+		},
 	},
 
 	Hunt = {

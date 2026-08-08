@@ -12,7 +12,7 @@ local ProfileStore = require(Modules.ProfileStore)
 local ProfileTemplate = require(ReplicatedStorage.Shared.ProfileTemplate)
 
 local PLAYER_STORE_NAME = "PlayerData"
-local KICK_MESSAGE = "Не удалось загрузить твои данные. Перезайди — так мы не перезапишем прогресс."
+local KICK_MESSAGE = "Couldn't load your data. Please rejoin — this way your progress won't be overwritten."
 
 local PlayerStore = ProfileStore.New(PLAYER_STORE_NAME, ProfileTemplate)
 
