@@ -21,6 +21,8 @@ local Config = {
 	Hunt = {
 		TickDuration = 0.8,
 		MaxStamina = 100,
+		-- Оба ударили в разные стороны и разошлись мимо друг друга.
+		MissStaminaCost = 10,
 	},
 
 	Pin = {

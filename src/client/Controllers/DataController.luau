@@ -53,7 +53,14 @@ function DataController.OnChanged(callback: (data: { [any]: any }) -> ())
 	end
 end
 
+local initialized = false
+
 function DataController.Init()
+	if initialized then
+		return
+	end
+	initialized = true
+
 	profileUpdated.OnClientEvent:Connect(apply)
 
 	-- Стартовый запрос отдельным потоком: он не должен задерживать

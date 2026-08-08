@@ -48,7 +48,14 @@ local function push(player: Player)
 	profileUpdated:FireClient(player, data)
 end
 
+local initialized = false
+
 function ProfileReplicationService.Init()
+	if initialized then
+		return
+	end
+	initialized = true
+
 	-- Один источник событий: и первая загрузка профиля, и любое изменение.
 	DataService.OnProfileChanged(push)
 

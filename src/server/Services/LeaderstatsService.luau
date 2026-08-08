@@ -54,7 +54,14 @@ local function sync(player: Player)
 	coins.Value = profile.Data.Coins
 end
 
+local initialized = false
+
 function LeaderstatsService.Init()
+	if initialized then
+		return
+	end
+	initialized = true
+
 	-- Одна точка обновления: и первая загрузка профиля, и любое последующее
 	-- изменение данных приходят сюда же.
 	DataService.OnProfileChanged(sync)

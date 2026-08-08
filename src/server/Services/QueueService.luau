@@ -104,7 +104,14 @@ local function onPlayerRemoving(player: Player)
 	-- Из самой очереди вышедшего игрока убирает MatchmakingService.
 end
 
+local initialized = false
+
 function QueueService.Init()
+	if initialized then
+		return
+	end
+	initialized = true
+
 	local zone = Workspace:WaitForChild("Lobby"):WaitForChild("Zones"):WaitForChild("Casual")
 
 	pad = zone:WaitForChild("Platform") :: BasePart

@@ -132,7 +132,14 @@ local function onPlayerRemoving(player: Player)
 	locked[player] = nil
 end
 
+local initialized = false
+
 function ArenaService.Init()
+	if initialized then
+		return
+	end
+	initialized = true
+
 	local arena = Workspace:WaitForChild("Arena")
 	local slots = arena:WaitForChild("Slots")
 

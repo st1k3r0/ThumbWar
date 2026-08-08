@@ -49,7 +49,14 @@ local function broadcast(match: MatchService.Match, phaseEndsAt: number)
 	end
 end
 
+local initialized = false
+
 function MatchStateService.Init()
+	if initialized then
+		return
+	end
+	initialized = true
+
 	MatchService.OnPhaseChanged(broadcast)
 end
 

@@ -189,7 +189,14 @@ local function onPlayerRemoving(player: Player)
 	end
 end
 
+local initialized = false
+
 function MatchmakingService.Init()
+	if initialized then
+		return
+	end
+	initialized = true
+
 	Players.PlayerRemoving:Connect(onPlayerRemoving)
 end
 

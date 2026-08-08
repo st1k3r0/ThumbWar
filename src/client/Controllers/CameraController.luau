@@ -54,7 +54,14 @@ local function disable()
 	end
 end
 
+local initialized = false
+
 function CameraController.Init()
+	if initialized then
+		return
+	end
+	initialized = true
+
 	matchCamera.OnClientEvent:Connect(function(cameraCFrame: CFrame?)
 		-- nil означает "матч закончился, верни обычную камеру".
 		if cameraCFrame == nil then

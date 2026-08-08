@@ -9,6 +9,7 @@ local CONTROLLER_ORDER: { ModuleScript } = {
 	Controllers.DataController,
 	Controllers.CameraController,
 	Controllers.MatchStateController,
+	Controllers.HuntInputController,
 }
 
 for _, moduleScript in CONTROLLER_ORDER do

@@ -37,10 +37,13 @@ local function makeLabel(name: string, position: UDim2, size: UDim2, textSize: n
 	return label
 end
 
+local initialized = false
+
 function MatchStateUI.Build()
-	if screenGui ~= nil then
+	if initialized then
 		return
 	end
+	initialized = true
 
 	screenGui = Instance.new("ScreenGui")
 	screenGui.Name = "MatchState"

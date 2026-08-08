@@ -83,7 +83,14 @@ function MatchStateController.IsInputAllowed(): boolean
 	return state.phase ~= MatchPhase.Ritual
 end
 
+local initialized = false
+
 function MatchStateController.Init()
+	if initialized then
+		return
+	end
+	initialized = true
+
 	UI.Build()
 	matchState.OnClientEvent:Connect(apply)
 end

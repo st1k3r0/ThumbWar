@@ -12,6 +12,7 @@ local SERVICE_ORDER: { ModuleScript } = {
 	Services.MatchmakingService,
 	Services.MatchService,
 	Services.MatchStateService,
+	Services.HuntService,
 	Services.ArenaService,
 	Services.QueueService,
 }

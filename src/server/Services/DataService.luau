@@ -127,7 +127,14 @@ local function onPlayerRemoving(player: Player)
 end
 
 -- Поднимает сервис: подписки на вход/выход и загрузка уже присутствующих игроков.
+local initialized = false
+
 function DataService.Init()
+	if initialized then
+		return
+	end
+	initialized = true
+
 	Players.PlayerAdded:Connect(onPlayerAdded)
 	Players.PlayerRemoving:Connect(onPlayerRemoving)
 

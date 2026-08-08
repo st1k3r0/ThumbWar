@@ -22,6 +22,8 @@ export type Match = {
 	players: { Player },
 	-- Выигранные раунды по каждому игроку.
 	score: { [Player]: number },
+	-- Текущая стамина по каждому игроку.
+	stamina: { [Player]: number },
 	-- Текущая фаза, одно из значений MatchPhase.
 	phase: MatchPhase.Phase,
 	-- Номер текущего раунда, считается с первого.
@@ -56,6 +58,11 @@ function MatchService.Create(playerA: Player, playerB: Player): Match
 		score = {
 			[playerA] = 0,
 			[playerB] = 0,
+		},
+		-- Стамина стартует полной: это балансовое значение, оно из Config.
+		stamina = {
+			[playerA] = Config.Hunt.MaxStamina,
+			[playerB] = Config.Hunt.MaxStamina,
 		},
 		phase = MatchPhase.Ritual,
 		roundNumber = 1,
@@ -193,6 +200,13 @@ function MatchService.IsRunning(matchId: number): boolean
 	return running[matchId] == true
 end
 
-function MatchService.Init() end
+local initialized = false
+
+function MatchService.Init()
+	if initialized then
+		return
+	end
+	initialized = true
+end
 
 return MatchService
