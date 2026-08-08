@@ -1,8 +1,8 @@
 # Project place file
 /ThumbWar.rbxlx
 
-# Roblox Studio lock files
-/*.rbxlx.lock
-/*.rbxl.lock
+# Roblox Studio lock files (в любой папке, не только в корне)
+*.rbxlx.lock
+*.rbxl.lock
 
 sourcemap.json
